@@ -15,7 +15,6 @@ casadi3.6.3    （linux，C++版本，用于求解NLP问题）
 matplotlibcpp  （用于绘图，由于调用的是python的绘图，因此需要安装python和相应的python绘图库）  
 
 # 2 项目构建  
-在主目录下创建文件夹rosusv_ws：mkdir rosusv_ws  
 拷贝代码到本地文件夹：         git clone https://github.com/quyinsong/rosusv_ws.git  
 在rosusv_ws文件夹下运行：     catkin_make  
 
@@ -56,6 +55,11 @@ source ~/.bashrc
 
 # 6 问题  
 轨迹跟踪存在问题，不能很好的跟踪轨迹，估计是时序问题
+
+# 7 更新  
+分支rosusv-v1解决了轨迹跟踪绘图的问题  
+分支下载：git clone -b rosusv-v1 https://github.com/quyinsong/rosusv_ws.git  
+下载后的编译过程如步骤2-步骤5  
 
 # 7 本人联系方式  
 qu13298110549@163.com  
