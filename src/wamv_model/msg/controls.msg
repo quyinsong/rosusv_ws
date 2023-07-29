@@ -1,0 +1,2 @@
+float32 thrust_left
+float32 thrust_right

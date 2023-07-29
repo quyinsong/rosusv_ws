@@ -1,0 +1,8 @@
+<launch>
+	<!-- 启动wamv模型节点 -->
+	<node pkg="wamv_model" type="test_wamv_model" name="test_wamv_model" output="screen" />
+	<!-- 启动绘图节点 -->
+	<node pkg="myplot" type="test_plot_ttc"  name="test_plot_ttc" output="screen" />
+    <!-- 启动nmpc控制节点 -->
+    <node pkg="mycontroller" type="test_trajectory_tracking"  name="test_trajectory_tracking" output="screen" />
+</launch>
