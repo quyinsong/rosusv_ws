@@ -61,5 +61,5 @@ source ~/.bashrc
 分支下载：git clone -b rosusv-v1 https://github.com/quyinsong/rosusv_ws.git  
 下载后的编译过程如步骤2-步骤5  
 
-# 7 本人联系方式  
+# 8 本人联系方式  
 qu13298110549@163.com  
