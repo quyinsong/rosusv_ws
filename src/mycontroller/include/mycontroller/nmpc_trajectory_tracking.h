@@ -18,6 +18,8 @@ private:
     std::string m_task; //当前任务设置
     //轨迹序列点
     std::vector<Eigen::Matrix<float,8,1>> m_trajectory_sequence;
+    //当前期望位置
+    Eigen::Vector3f current_desired_pos;
     //符号定义
     casadi::Function m_solver; //求解器
     casadi::Function m_predict_fun; //预测函数
@@ -51,8 +53,11 @@ public:
     //获取最优控制向量
     Eigen::Matrix<float,2,1> get_controls();
 
-    //获得最优控制序列
+    //获得最优控制轨迹
     std::vector<Eigen::Matrix<float,6,1>> get_predict_trajectory();
+
+    //获取当前期望位置
+    Eigen::Vector3f get_current_desired_pos();
 
 };
 

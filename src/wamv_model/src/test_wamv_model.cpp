@@ -45,14 +45,14 @@ int main(int argc, char **argv)
     ros::init(argc,argv,"test_car_model"); 
     ros::NodeHandle nh;
     // 创建一个Publisher，发布名为/hello的topic，消息类型为std_msgs::String，队列长度100
-    ros::Publisher msg_pub = nh.advertise<wamv_model::states>("/wamv_states", 100);
+    ros::Publisher msg_pub = nh.advertise<wamv_model::states>("/wamv_states", 10);
     // 创建一个监听对象，接收控制器的控制指令
     Listener mlistener;
-    ros::Subscriber msg_sub = nh.subscribe<wamv_model::controls>("/nmpc_controls",100,&Listener::callback,&mlistener);
+    ros::Subscriber msg_sub = nh.subscribe<wamv_model::controls>("/nmpc_controls",10,&Listener::callback,&mlistener);
     //初始化小车
     float sample_time = 0.02;     //采样时间，用来更新小车状态
     Eigen::Matrix<float,6,1> states;       //小车x,y,theta状态
-    states<<0,0,0,0,0,0;
+    states<<0,0,0,0,0,M_PI/2;
     Eigen::Vector2f controls;     //小车控制量
     controls<<0,0;
     int integration_step = 1;
