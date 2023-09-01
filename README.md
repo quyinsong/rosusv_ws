@@ -20,22 +20,11 @@ matplotlibcpp  （用于绘图，由于调用的是python的绘图，因此需�
 在rosusv_ws文件夹下运行：     catkin_make  
 
 构建可能遇到的问题：找不到自定义消息头文件，比如wamv_model/states.h，wamv_model/controls.h  
-解决办法：打开wamv_model/CMakeList.txt文件,注释  
-add_message_files(  
-  FILES  
-  states.msg  
-  #controls.msg  
-  #test.msg  
-)  
-再次执行：catkin_make  
-然后注释如下:  
-add_message_files(  
-  FILES  
-  states.msg  
-  controls.msg  
-  #test.msg  
-)  
-再次执行：catkin_make  
+解决办法：  
+（1）在src文件中将其他包文件夹删除，只保留一个包文件夹wamv_model  
+（2）执行catkin_make编译，执行完后在devel/include/wamv_model中就会出现两个头文件，controls.h和states.h  
+（3）将其余包文件夹放入src中  
+（4）再次执行catkin_make编译，就可以编译成功了  
 此时项目可以完全构建成功  
 
 # 3 配置环境变量  
