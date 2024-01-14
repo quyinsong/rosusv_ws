@@ -146,14 +146,14 @@ void TrajectoryTrackingNMPC::set_my_nmpc_solver_for_TrajectoryTracking()
     //惩罚矩阵
     casadi::SX m_Q = casadi::SX::zeros(6,6);
     casadi::SX m_R = casadi::SX::zeros(2,2);
-    m_Q(0,0) = 0.01;
-    m_Q(1,1) = 0.01;
+    m_Q(0,0) = 1;
+    m_Q(1,1) = 0.1;
     m_Q(2,2) = 0.01;
-    m_Q(3,3) = 60;
-    m_Q(4,4) = 60;
-    m_Q(5,5) = 200;
-    m_R(0,0) = 0.005;
-    m_R(1,1) = 0.005;
+    m_Q(3,3) = 100;
+    m_Q(4,4) = 100;
+    m_Q(5,5) = 3000;
+    m_R(0,0) = 0.001;
+    m_R(1,1) = 0.001;
     
     //计算代价函数
     casadi::SX cost_fun = casadi::SX::sym("cost_fun");
@@ -163,8 +163,8 @@ void TrajectoryTrackingNMPC::set_my_nmpc_solver_for_TrajectoryTracking()
     for(int k=0;k<m_predict_step;k++)
     {
         casadi::SX states_err = X(casadi::Slice(),k)-Xref(casadi::Slice(0,6,1),k);
-        // casadi::SX controls_err = U(casadi::Slice(),k)-Xref(casadi::Slice(6,8,1),k);
-        casadi::SX controls_err = U(casadi::Slice(),k);
+        casadi::SX controls_err = U(casadi::Slice(),k)-Xref(casadi::Slice(6,8,1),k);
+        // casadi::SX controls_err = U(casadi::Slice(),k);
         cost_fun = cost_fun+casadi::SX::mtimes({states_err.T(),m_Q,states_err})+
                             casadi::SX::mtimes({controls_err.T(),m_R,controls_err});
     }
@@ -210,6 +210,8 @@ void TrajectoryTrackingNMPC::opti_solution_for_TrajectoryTracking(Eigen::Matrix<
     }
     //设置求解器输入参数
     m_nmpc_stage++;
+    // std::cout<<"m_nmpc_stage: "<<m_nmpc_stage<<std::endl;
+
     for(int j=0;j<6;j++)
     {
         parameters.push_back(current_states[j]);
@@ -261,6 +263,12 @@ void TrajectoryTrackingNMPC::opti_solution_for_TrajectoryTracking(Eigen::Matrix<
     
     }
 
+    //当前期望位置
+    current_desired_pos<< parameters.at(9),parameters.at(10),parameters.at(11);
+
+    //打印第一个轨迹点
+    // std::cout<<"Deisired states: ["<<parameters.at(9)<<", "<<parameters.at(10)<<", "<<parameters.at(11)<<"]"<<std::endl;
+    
     //求解参数设置
     m_args["lbx"] = lbx;
     m_args["ubx"] = ubx;
@@ -271,7 +279,7 @@ void TrajectoryTrackingNMPC::opti_solution_for_TrajectoryTracking(Eigen::Matrix<
 
     //获取代价函数
     casadi::SX cost_f = m_res.at("f");
-    std::cout<<"代价值: "<<cost_f<<std::endl;
+    // std::cout<<"代价值: "<<cost_f<<std::endl;
 
     //获取优化变量
     std::vector<float> res_control_all(m_res.at("x"));
@@ -347,5 +355,12 @@ Eigen::Matrix<float,2,1> TrajectoryTrackingNMPC::get_controls()        // casadi
 std::vector<Eigen::Matrix<float, 6, 1>> TrajectoryTrackingNMPC::get_predict_trajectory()
 {
     return m_predict_trajectory;
+}
+
+Eigen::Vector3f TrajectoryTrackingNMPC::get_current_desired_pos()        // casadi::SX c13 = 0;
+        // casadi::SX c23 = 0;
+{
+
+    return current_desired_pos;
 }
 
