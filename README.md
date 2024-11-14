@@ -1,5 +1,5 @@
 # rosusv_ws
-ROS话题通信初探——基于NMPC的无人艇定点控制与轨迹跟踪控制仿真
+ROS话题通信初探——基于NMPC的自定义无人艇定点控制与轨迹跟踪控制仿真
 
 # 0 项目结构  
 src文件夹共包含三个功能包：  
@@ -23,18 +23,22 @@ matplotlibcpp  （用于绘图，由于调用的是python的绘图，因此需�
 
 ## 找不到自定义消息头文件，比如car_model/states.h，car_model/controls.h  
 
-解决办法：打开car_model/CMakeList.txt文件,注释  
+解决办法：打开wamv_model/CMakeList.txt文件,注释  
 
-add_executable(test_pub ./src/test_pub.cpp)\
-target_link_libraries(test_pub ${catkin_LIBRARIES})\
-add_executable(test_car_model ./src/test_car_model.cpp ./src/car_model.cpp)\
-target_link_libraries(test_car_model ${catkin_LIBRARIES})
+add_executable(test_wamv_model ./src/test_wamv_model.cpp ./src/wamv_model.cpp)\
+target_link_libraries(test_wamv_model ${catkin_LIBRARIES})\
 
-打开controller文件夹，进入controller/CMakeList.txt文件，注释：
+打开controller文件夹，进入mycontroller/CMakeList.txt文件，注释：
 
-add_executable(test_nmpc ./src/test_nmpc.cpp ./src/nmpc1.cpp)\
-target_link_libraries(test_nmpc ${catkin_LIBRARIES})\
-target_link_libraries(test_nmpc /usr/local/lib/libcasadi.so.3.7) 
+add_executable(test_station_keeping ./src/test_station_keeping.cpp ./src/nmpc_station_keeping.cpp)\
+target_link_libraries(test_station_keeping ${catkin_LIBRARIES})\
+target_link_libraries(test_station_keeping /usr/local/lib/libcasadi.so.3.7) 
+
+add_executable(test_trajectory_tracking ./src/test_trajectory_tracking.cpp \
+              ./src/nmpc_trajectory_tracking.cpp ./src/single_trajectory.cpp \
+              ./src/wamv_model.cpp)\
+target_link_libraries(test_trajectory_tracking ${catkin_LIBRARIES})\
+target_link_libraries(test_trajectory_tracking /usr/local/lib/libcasadi.so.3.7)
 
 打开myplot文件夹，进入myplot/CMakeList.txt文件，注释
 
@@ -42,6 +46,12 @@ add_executable(test_plot ./src/test_plot.cpp ./src/comfun.cpp)\
 target_link_libraries(test_plot ${catkin_LIBRARIES})\
 target_include_directories(test_plot PRIVATE ${PYTHON2_INCLUDE_DIRS})\
 target_link_libraries(test_plot ${PYTHON_LIBRARIES})
+
+add_executable(test_plot_ttc ./src/test_plot_ttc.cpp ./src/comfun.cpp\
+               ./src/single_trajectory.cpp ./src/wamv_model.cpp)\
+target_link_libraries(test_plot_ttc ${catkin_LIBRARIES})\
+target_include_directories(test_plot_ttc PRIVATE ${PYTHON2_INCLUDE_DIRS})\
+target_link_libraries(test_plot_ttc ${PYTHON_LIBRARIES})
 
 按照上述流程注释完成以后，执行catkin_make，编译生成msg头文件\
 然后将上述注释取消，再执行catkin_make，即可编译成功\
@@ -54,19 +64,27 @@ git clone https://github.com/lava/matplotlib-cpp\
 cp matplotlib-cpp/matplotlibcpp.h /usr/local/include/\
 
 # 4 配置环境变量  
-把当前工作空间的环境变量设置到bash中并source bashrc文件使其生效:  
-echo "source ~/rosusv_ws/devel/setup.bash" >> ~/.bashrc  
-source ~/.bashrc  
+把当前工作空间的环境变量设置到bash中并source bashrc文件使其生效:\  
+echo "source ~/rosusv_ws/devel/setup.bash" >> ~/.bashrc \
+source ~/.bashrc 
 
 # 5 运行  
-首先在一个终端运行roscore  
+首先在一个终端运行roscore  \
 (1) 测试定点控制：roslaunch mycontroller test_station_keeping.launch  
-(2) 测试轨迹跟踪控制：roslaunch mycontroller test_trajectory_tracking.launch  
+
+![image](https://github.com/user-attachments/assets/b0f26818-cc31-4364-9666-a372811e6fc5)
+
+![image](https://github.com/user-attachments/assets/51503941-003c-43cb-88d4-9d5a52a5aef1)
+
+(2) 测试轨迹跟踪控制：roslaunch mycontroller test_trajectory_tracking.launch  (算法存在问题，不能跟踪)
+
+![image](https://github.com/user-attachments/assets/069947e7-5585-4deb-9684-ae957d7f8e10)
+
 
 # 6 算法参数修改  
-(1) 定点控制：NMPC参数：在nmpc_station_keeping.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R  
-    设定期望点：在test_station_keeping.cpp中可修改期望到达的位置  
-(2) 轨迹跟踪：NMPC参数：在nmpc_trajectory_tracking.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R 
+(1) 定点控制：NMPC参数：在nmpc_station_keeping.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R \ 
+    设定期望点：在test_station_keeping.cpp中可修改期望到达的位置  \
+(2) 轨迹跟踪：NMPC参数：在nmpc_trajectory_tracking.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R \
     设定期望轨迹：在test_trajectory_tracking.cpp中可修改期望轨迹  
 
 # 7 问题  
