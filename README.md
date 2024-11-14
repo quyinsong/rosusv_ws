@@ -80,6 +80,7 @@ source ~/.bashrc
 
 ![image](https://github.com/user-attachments/assets/069947e7-5585-4deb-9684-ae957d7f8e10)
 
+![image](https://github.com/user-attachments/assets/c50dfa7c-4a6a-40de-9984-1bb2ceefa5fe)
 
 # 6 算法参数修改  
 (1) 定点控制：NMPC参数：在nmpc_station_keeping.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R \ 
