@@ -19,7 +19,7 @@ matplotlibcpp  （用于绘图，由于调用的是python的绘图，因此需�
 拷贝代码到本地文件夹：         git clone https://github.com/quyinsong/rosusv_ws.git  
 在rosusv_ws文件夹下运行：     catkin_make  
 
-构建可能遇到的问题：
+# 3 构建可能遇到的问题：
 
 ## 找不到自定义消息头文件，比如car_model/states.h，car_model/controls.h  
 
@@ -53,24 +53,24 @@ target_link_libraries(test_plot ${PYTHON_LIBRARIES})
 git clone https://github.com/lava/matplotlib-cpp\
 cp matplotlib-cpp/matplotlibcpp.h /usr/local/include/\
 
-# 3 配置环境变量  
+# 4 配置环境变量  
 把当前工作空间的环境变量设置到bash中并source bashrc文件使其生效:  
 echo "source ~/rosusv_ws/devel/setup.bash" >> ~/.bashrc  
 source ~/.bashrc  
 
-# 4 运行  
+# 5 运行  
 首先在一个终端运行roscore  
 (1) 测试定点控制：roslaunch mycontroller test_station_keeping.launch  
 (2) 测试轨迹跟踪控制：roslaunch mycontroller test_trajectory_tracking.launch  
 
-# 5 算法参数修改  
+# 6 算法参数修改  
 (1) 定点控制：NMPC参数：在nmpc_station_keeping.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R  
     设定期望点：在test_station_keeping.cpp中可修改期望到达的位置  
 (2) 轨迹跟踪：NMPC参数：在nmpc_trajectory_tracking.cpp中可修改惩罚矩阵Q和R的数值，m_Q和m_R 
     设定期望轨迹：在test_trajectory_tracking.cpp中可修改期望轨迹  
 
-# 6 问题  
+# 7 问题  
 轨迹跟踪存在问题，不能很好的跟踪轨迹，估计是时序问题
 
-# 7 本人联系方式  
+# 8 本人联系方式  
 ***
