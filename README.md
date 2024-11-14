@@ -19,13 +19,39 @@ matplotlibcpp  （用于绘图，由于调用的是python的绘图，因此需�
 拷贝代码到本地文件夹：         git clone https://github.com/quyinsong/rosusv_ws.git  
 在rosusv_ws文件夹下运行：     catkin_make  
 
-构建可能遇到的问题：找不到自定义消息头文件，比如wamv_model/states.h，wamv_model/controls.h  
-解决办法：  
-（1）在src文件中将其他包文件夹删除，只保留一个包文件夹wamv_model  
-（2）执行catkin_make编译，执行完后在devel/include/wamv_model中就会出现两个头文件，controls.h和states.h  
-（3）将其余包文件夹放入src中  
-（4）再次执行catkin_make编译，就可以编译成功了  
-此时项目可以完全构建成功  
+构建可能遇到的问题：
+
+## 找不到自定义消息头文件，比如car_model/states.h，car_model/controls.h  
+
+解决办法：打开car_model/CMakeList.txt文件,注释  
+
+add_executable(test_pub ./src/test_pub.cpp)\
+target_link_libraries(test_pub ${catkin_LIBRARIES})\
+add_executable(test_car_model ./src/test_car_model.cpp ./src/car_model.cpp)\
+target_link_libraries(test_car_model ${catkin_LIBRARIES})
+
+打开controller文件夹，进入controller/CMakeList.txt文件，注释：
+
+add_executable(test_nmpc ./src/test_nmpc.cpp ./src/nmpc1.cpp)\
+target_link_libraries(test_nmpc ${catkin_LIBRARIES})\
+target_link_libraries(test_nmpc /usr/local/lib/libcasadi.so.3.7) 
+
+打开myplot文件夹，进入myplot/CMakeList.txt文件，注释
+
+add_executable(test_plot ./src/test_plot.cpp ./src/comfun.cpp)\
+target_link_libraries(test_plot ${catkin_LIBRARIES})\
+target_include_directories(test_plot PRIVATE ${PYTHON2_INCLUDE_DIRS})\
+target_link_libraries(test_plot ${PYTHON_LIBRARIES})
+
+按照上述流程注释完成以后，执行catkin_make，编译生成msg头文件\
+然后将上述注释取消，再执行catkin_make，即可编译成功\
+
+## 找不到casadi头文件
+自行安装casadi，参考https://blog.csdn.net/qq_41701758/article/details/131527719?spm=1001.2014.3001.5501
+
+## 找不到matplotlibcpp头文件
+git clone https://github.com/lava/matplotlib-cpp\
+cp matplotlib-cpp/matplotlibcpp.h /usr/local/include/\
 
 # 3 配置环境变量  
 把当前工作空间的环境变量设置到bash中并source bashrc文件使其生效:  
